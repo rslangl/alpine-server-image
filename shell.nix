@@ -14,6 +14,8 @@
 
       trap 'echo "Cleanup in progres..."; sudo docker stop $(sudo docker ps -a -q); sudo docker rm -vf $(sudo docker ps -a -q); sudo docker rmi -f $(sudo docker images -aq); kill $DOCKER_PID; echo "Cleanup completed!"' EXIT
 
+      ssh-keygen -t rsa -b 4096 -f ssh/ssh -N "" -q
+
       echo "Starting Docker daemon..."
       sudo nohup dockerd > /tmp/dockerd.log 2>&1 &
       DOCKER_PID=$!
