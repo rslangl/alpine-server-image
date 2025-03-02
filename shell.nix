@@ -10,31 +10,25 @@
 
     shellHook = ''
       DOCKER_PID=""
-      DOCKER_BUILD_RET=""
-      DOCKER_RUN_RET=""
+      CONTAINER_IP=""
 
       trap 'echo "Cleanup in progres..."; sudo docker stop $(sudo docker ps -a -q); sudo docker rm -vf $(sudo docker ps -a -q); sudo docker rmi -f $(sudo docker images -aq); kill $DOCKER_PID; echo "Cleanup completed!"' EXIT
 
-      if ! pgrep -x "dockerd" > /dev/null; then
-        echo "Starting Docker daemon..."
-        sudo nohup dockerd > /tmp/dockerd.log 2>&1 &
-        DOCKER_PID=$!
-        sleep 1
-        echo "Done!"
-      fi
+      echo "Starting Docker daemon..."
+      sudo nohup dockerd > /tmp/dockerd.log 2>&1 &
+      DOCKER_PID=$!
+      sleep 1
+      echo "Done!"
 
-      if kill -0 $DOCKER_PID 2>/dev/null; then
-        echo "Building Docker image..."
-        sudo docker build -t alpine:local .
-        DOCKER_BUILD_RET=$?
-        sleep 1
-        echo "Done!"
-      fi
+      echo "Building Docker image..."
+      sudo docker build -t alpine:local .
+      sleep 1
+      echo "Done!"
 
-      if $DOCKER_BUILD_RET -eq 0; then
-        echo "Launching Docker container..."
-        sudo docker run -d alpine:local
-        echo "Done!"
-      fi
-    '';
+
+      echo "Launching Docker container..."
+      sudo docker run --name target -d alpine:local --name target
+      CONTAINER_IP=$(sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' target)
+      echo "Done!"
+      '';
   }
