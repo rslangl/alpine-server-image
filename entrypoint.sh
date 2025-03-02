@@ -1,16 +1,14 @@
 #!/bin/sh
 
-# # start openrc
-# touch /run/openrc/softlevel
-# rc-status
-#
-# # add sshd service to openrc runlevel
-# rc-update add sshd default
-#
-# # start sshd service
-# rc-service sshd start
+# start openrc
+rc-status
+touch /run/openrc/softlevel
 
-sshd -D &
+# add sshd service to openrc runlevel
+rc-update add sshd default
+
+# start sshd service
+rc-service sshd start
 
 # keep container running
 tail -f /dev/null
