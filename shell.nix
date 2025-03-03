@@ -13,7 +13,7 @@
       DOCKER_PID=""
       CONTAINER_IP=""
 
-      trap 'echo "Cleanup in progres..."; sudo docker stop $(sudo docker ps -a -q); sudo docker rm -vf $(sudo docker ps -a -q); sudo docker rmi -f $(sudo docker images -aq); kill $DOCKER_PID; head -n 1 inventory; echo CONTAINER; echo "Cleanup completed!"' EXIT
+      trap 'echo "Cleanup in progres..."; sudo docker stop $(sudo docker ps -a -q); sudo docker rm -vf $(sudo docker ps -a -q); sudo docker rmi -f $(sudo docker images -aq); kill $DOCKER_PID; sed -i '2s/.*/CONTAINER/' inventory; echo "Cleanup completed!"' EXIT
 
       ssh-keygen -t rsa -b 4096 -f ssh/ssh -N "" -q
 
@@ -34,6 +34,6 @@
       CONTAINER_IP=$(sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' target)
       echo "Done!"
 
-      sed "s/CONTAINER/$CONTAINER_IP/" inventory
+      sed -i "s/CONTAINER/$CONTAINER_IP/" inventory
       '';
   }
