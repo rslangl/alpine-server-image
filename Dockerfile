@@ -7,6 +7,7 @@ RUN apk update && apk add --no-cache \
   openssh \
   docker \
   lxd \
+  python \
   && rm -rf /var/cache/apk/*
 
 FROM build_hardened AS ssh_server
