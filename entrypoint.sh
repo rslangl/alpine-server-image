@@ -25,5 +25,8 @@ networks:
     ipv6.address: none
 EOF
 
+rc-update add lxd default
+rc-service lxd start
+
 # keep container running
 tail -f /dev/null
