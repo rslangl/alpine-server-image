@@ -2,6 +2,7 @@
 
   let tools = with pkgs; [
     docker
+    ansible
   ];
 
   in pkgs.mkShell {
@@ -12,7 +13,7 @@
       DOCKER_PID=""
       CONTAINER_IP=""
 
-      trap 'echo "Cleanup in progres..."; sudo docker stop $(sudo docker ps -a -q); sudo docker rm -vf $(sudo docker ps -a -q); sudo docker rmi -f $(sudo docker images -aq); kill $DOCKER_PID; echo "Cleanup completed!"' EXIT
+      trap 'echo "Cleanup in progres..."; sudo docker stop $(sudo docker ps -a -q); sudo docker rm -vf $(sudo docker ps -a -q); sudo docker rmi -f $(sudo docker images -aq); kill $DOCKER_PID; sed -i '2s/.*/CONTAINER/' inventory; echo "Cleanup completed!"' EXIT
 
       ssh-keygen -t rsa -b 4096 -f ssh/ssh -N "" -q
 
@@ -32,5 +33,7 @@
       sudo docker run --name target -d alpine:local --name target
       CONTAINER_IP=$(sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' target)
       echo "Done!"
+
+      sed -i "s/CONTAINER/$CONTAINER_IP/" inventory
       '';
   }
