@@ -2,3 +2,18 @@
 - name: Test
   ansible.builtin.debug:
     msg: System {{ inventory_hostname }}
+
+- name: LXD Test
+  community.general.lxd_container:
+    name: testcontainer
+    ignore_volatile_options: true
+    state: started
+    source:
+      type: image
+      mode: pull
+      server: https://cloud-images.ubuntu.com/releases/
+      protocol: simplestreams
+      alias: "22.04"
+    profiles: ["default"]
+    wait_for_ipv4_addresses: true
+    timeout: 600

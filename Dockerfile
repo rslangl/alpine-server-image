@@ -1,12 +1,18 @@
 FROM alpine:3.21 AS build_hardened
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
-RUN apk update && apk add --no-cache hardened-malloc \
+RUN apk update && apk add --no-cache \
+  hardened-malloc \
   openrc \
   bash \
   openssh \
+  docker \
+  lxd \
+  python3 \
   && rm -rf /var/cache/apk/*
 
 FROM build_hardened AS ssh_server
+
+ENV LD_PRELOAD=/usr/lib/libhardened_malloc.so
 
 RUN ssh-keygen -A
 
@@ -24,8 +30,6 @@ RUN echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
 RUN echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-
-# exec LD_PRELOAD=/usr/lib/libhardened_malloc.so
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
