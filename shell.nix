@@ -30,7 +30,7 @@
 
 
       echo "Launching Docker container..."
-      sudo docker run --name target -d alpine:local --name target
+      sudo docker run --name target -d alpine:local
       CONTAINER_IP=$(sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' target)
       echo "Done!"
 
