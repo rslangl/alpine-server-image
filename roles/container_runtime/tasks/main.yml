@@ -1,0 +1,11 @@
+# tasks/main.yml
+---
+- name: Install LXD
+  become: true
+  community.general.apk:
+    name: lxd
+    update_cache: true
+  notify:
+    - Enable user access
+    - Enable LXD service
+    - Initialize LXD

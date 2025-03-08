@@ -3,6 +3,8 @@
   ansible.builtin.debug:
     msg: System {{ inventory_hostname }}
 
+# getent group LXD | grep "{{ ansible_user }}"
+
 - name: LXD Test
   community.general.lxd_container:
     name: testcontainer
