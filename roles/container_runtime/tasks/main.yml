@@ -1,5 +1,12 @@
 # tasks/main.yml
 ---
+- name: Create LXD serviceaccount
+  ansible.builtin.user:
+    name: lxd
+    system: true
+    shell: /bin/false
+    create_home: false
+
 - name: Install LXD
   become: true
   community.general.apk:
