@@ -6,7 +6,7 @@ RUN apk update && apk add --no-cache \
   bash \
   openssh \
   docker \
-  lxd \
+  #lxd \
   python3 \
   && rm -rf /var/cache/apk/*
 

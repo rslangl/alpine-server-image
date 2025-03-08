@@ -1,0 +1,48 @@
+# handlers/main.yml
+---
+# - name: Enable user access
+#   block:
+- name: Check user access to LXD
+  ansible.builtin.getent:
+    database: group
+    key: lxd
+  register: group_list
+
+- name: Debug output
+  debug:
+    var: group_list
+
+- name: Grant user access to LXD
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: lxd
+    append: true
+  when: "'root' not in group_list.ansible_facts.getent_group.lxd[2]"
+
+- name: Create LXD group
+  ansible.builtin.group:
+    name: lxd
+    state: present
+
+- name: Enable LXD service
+  ansible.builtin.service:
+    name: lxd
+    enabled: true
+    state: started
+    runlevel: default
+
+- name: Initialize LXD
+  ansible.builtin.shell: |
+    cat <<EOF | lxd init --preseed
+    config:
+      core.https_address: 127.0.0.1:9999
+      images.auto_update_interval: 15
+    networks:
+    - name: lxdbr0
+      type: bridge
+      config:
+        ipv4.address: auto
+        ipv6.address: none
+    EOF
+
+
