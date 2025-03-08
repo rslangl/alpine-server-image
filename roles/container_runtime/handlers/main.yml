@@ -1,24 +1,28 @@
 # handlers/main.yml
 ---
-- name: Enable user access
-  block:
-  - name: Check user access to LXD
-    ansible.builtin.getent:
-      database: lxd
-      key: "{{ ansible_user }}"
-    register: lxd_access
+# - name: Enable user access
+#   block:
+- name: Check user access to LXD
+  ansible.builtin.getent:
+    database: group
+    key: lxd
+  register: group_list
 
-  - name: Grant user access to LXD
-    ansible.builtin.user:
-      name: "{{ ansible_user }}"
-      groups: lxd
-      append: true
-    when: lxd_access.rc != 0
+- name: Debug output
+  debug:
+    var: group_list
 
-  - name: Create LXD group
-    ansible.builtin.group:
-      name: lxd
-      state: present
+- name: Grant user access to LXD
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: lxd
+    append: true
+  when: "'root' not in group_list.ansible_facts.getent_group.lxd[2]"
+
+- name: Create LXD group
+  ansible.builtin.group:
+    name: lxd
+    state: present
 
 - name: Enable LXD service
   ansible.builtin.service:

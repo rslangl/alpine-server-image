@@ -5,7 +5,12 @@
   community.general.apk:
     name: lxd
     update_cache: true
+  register: result
   notify:
-    - Enable user access
+    - Check user access to LXD
+    - Debug output
+    - Grant user access to LXD
+    - Create LXD group
     - Enable LXD service
     - Initialize LXD
+  changed_when: true
