@@ -13,7 +13,7 @@
       DOCKER_PID=""
       CONTAINER_IP=""
 
-      trap 'echo "Cleanup in progres..."; sudo docker stop $(sudo docker ps -a -q); sudo docker rm -vf $(sudo docker ps -a -q); sudo docker rmi -f $(sudo docker images -aq); kill $DOCKER_PID; ssh-keygen -R $CONTAINER_IP; "HOME"/.ssh/ sed -i '2s/.*/CONTAINER/' inventory; echo "Cleanup completed!"' EXIT SIGTERM SIGINT
+      trap 'echo "Cleanup in progres..."; sudo docker stop $(sudo docker ps -a -q); sudo docker container rm -vf $(sudo docker ps -a -q); sudo docker rmi -f $(sudo docker images -aq); kill $DOCKER_PID; ssh-keygen -R $CONTAINER_IP; "HOME"/.ssh/ sed -i '2s/.*/CONTAINER/' inventory; echo "Cleanup completed!"' EXIT SIGTERM SIGINT
 
       ansible-galaxy collection install -r requirements.yml
 
@@ -32,7 +32,7 @@
 
 
       echo "Launching Docker container..."
-      sudo docker run --name target -d alpine:local
+      sudo docker run --name target -d --cgroupns=host --privileged -v /var/lib/lxd:/var/lib/lxd alpine:local
       CONTAINER_IP=$(sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' target)
       echo "Done!"
 
