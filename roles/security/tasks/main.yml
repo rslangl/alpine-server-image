@@ -1,10 +1,7 @@
-# tasks/main.yml
+# security/tasks/main.yml
 ---
-- name: Install hardened-malloc
-  community.general.apk:
-    name: hardened-malloc
-    repository: http://dl-cdn.alpinelinux.org/alpine/edge/testing
-    state: present
-    update_cache: true
-  notify:
-    - Enable hardened-malloc
+- name: Setup hardened malloc
+  include_tasks: hardened_malloc.yml
+  tags:
+    - default
+    - setup
