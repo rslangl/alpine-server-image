@@ -1,7 +1,7 @@
 FROM alpine:3.21 AS build_hardened
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+#RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
 RUN apk update && apk add --no-cache \
-  hardened-malloc \
+  #hardened-malloc \
   openrc \
   bash \
   openssh \
@@ -12,7 +12,7 @@ RUN apk update && apk add --no-cache \
 
 FROM build_hardened AS ssh_server
 
-ENV LD_PRELOAD=/usr/lib/libhardened_malloc.so
+#ENV LD_PRELOAD=/usr/lib/libhardened_malloc.so
 
 RUN ssh-keygen -A
 

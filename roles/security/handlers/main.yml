@@ -1,0 +1,8 @@
+# handlers/main.yml
+---
+- name: Enable hardened-malloc
+  ansible.builtin.lineinfile:
+    path: /etc/profile
+    line: LD_PRELOAD="/usr/lib/libhardened_malloc.so"
+    state: present
+
