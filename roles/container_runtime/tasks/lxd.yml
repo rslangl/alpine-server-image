@@ -1,0 +1,13 @@
+# container_runtime/tasks/main.yml
+---
+- name: Install LXD
+  become: true
+  community.general.apk:
+    name: lxd
+    update_cache: true
+  notify:
+    - Enable LXD service
+    - Initialize LXD
+  tags:
+    - default
+    - setup

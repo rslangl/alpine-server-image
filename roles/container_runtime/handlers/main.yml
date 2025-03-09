@@ -1,29 +1,5 @@
-# handlers/main.yml
+# container_runtime/handlers/main.yml
 ---
-# - name: Enable user access
-#   block:
-- name: Check user access to LXD
-  ansible.builtin.getent:
-    database: group
-    key: lxd
-  register: group_list
-
-- name: Debug output
-  debug:
-    var: group_list
-
-- name: Grant user access to LXD
-  ansible.builtin.user:
-    name: "{{ ansible_user }}"
-    groups: lxd
-    append: true
-  when: "'root' not in group_list.ansible_facts.getent_group.lxd[2]"
-
-- name: Create LXD group
-  ansible.builtin.group:
-    name: lxd
-    state: present
-
 - name: Enable LXD service
   ansible.builtin.service:
     name: lxd
@@ -43,6 +19,35 @@
       config:
         ipv4.address: auto
         ipv6.address: none
+    profiles:
+    - name: microk8s
+      config:
+        boot.autostart: "true"
+        linux.kernel_modules: ip_vs,ip_vs_rr,ip_vs_wrr,ip_vs_sh,ip_tables,ip6_tables,netlink_diag,nf_nat,overlay,br_netfilter
+        raw.lxc: |
+          lxc.apparmor.profile=unconfined
+          lxc.mount.auto=proc:rw sys:rw cgroup:rw
+          lxc.cgroup.devices.allow=a
+          lxc.cap.drop=
+        security.nesting: "true"
+        security.privileged: "true"
+      description: ""
+      devices:
+        aadisable:
+          path: /sys/module/nf_conntrack/parameters/hashsize
+          source: /sys/module/nf_conntrack/parameters/hashsize
+          type: disk
+        aadisable2:
+          path: /dev/kmsg
+          source: /dev/kmsg
+          type: unix-char
+        aadisable3:
+          path: /sys/fs/bpf
+          source: /sys/fs/bpf
+          type: disk
+        aadisable4:
+          path: /proc/sys/net/netfilter/nf_conntrack_max
+          source: /proc/sys/net/netfilter/nf_conntrack_max
+          type: disk
+
     EOF
-
-

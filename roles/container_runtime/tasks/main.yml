@@ -1,23 +1,13 @@
-# tasks/main.yml
+# container_runtime/tasks/main.yml
 ---
-- name: Create LXD serviceaccount
-  ansible.builtin.user:
-    name: lxd
-    system: true
-    shell: /bin/false
-    create_home: false
+- name: Setup user
+  include_tasks: user.yml
+  tags:
+    - default
+    - setup
 
-- name: Install LXD
-  become: true
-  community.general.apk:
-    name: lxd
-    update_cache: true
-  register: result
-  notify:
-    - Check user access to LXD
-    - Debug output
-    - Grant user access to LXD
-    - Create LXD group
-    - Enable LXD service
-    - Initialize LXD
-  changed_when: true
+- name: Setup LXD
+  include_tasks: lxd.yml
+  tags:
+    - default
+    - setup
