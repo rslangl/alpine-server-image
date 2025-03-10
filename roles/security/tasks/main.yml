@@ -1,7 +1,8 @@
 # security/tasks/main.yml
 ---
-- name: Setup hardened malloc
-  include_tasks: hardened_malloc.yml
-  tags:
-    - default
-    - setup
+ - name: Setup hardened malloc
+   include_tasks: hardened_malloc.yml
+   tags:
+     - default
+     - setup
+

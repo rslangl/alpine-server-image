@@ -1,4 +1,4 @@
-# tasks/main.yml
+# security/tasks/hardened_malloc.yml
 ---
 - name: Install hardened-malloc
   community.general.apk:
@@ -6,8 +6,16 @@
     repository: http://dl-cdn.alpinelinux.org/alpine/edge/testing
     state: present
     update_cache: true
-  notify:
-    - Enable hardened-malloc
   tags:
-  - default
-  - setup
+    - default
+    - setup
+
+- name: Enable hardened-malloc
+  ansible.builtin.lineinfile:
+    path: /etc/profile
+    line: LD_PRELOAD="/usr/lib/libhardened_malloc.so"
+    state: present
+  tags:
+    - default
+    - setup
+

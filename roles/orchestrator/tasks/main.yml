@@ -1,0 +1,7 @@
+# orchestrator/tasks/main.yml
+---
+- name: Setup microk8s
+  include_tasks: microk8s.yml
+  tags:
+    - default
+    - setup
