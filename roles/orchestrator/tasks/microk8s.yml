@@ -9,42 +9,31 @@
       mode: pull
       server: https://cloud-images.ubuntu.com/releases/
       protocol: simplestreams
-      alias: "22.04"
-    profiles: ["microk8s"]
+      alias: "24.10"
+    profiles: ["default", "microk8s"]
     wait_for_ipv4_addresses: true
     timeout: 600
   tags:
     - default
     - setup
 
-# - name: Install MicroK8s in an LXD container
-#   delegate_to: microk8s
-#   ansible.builtin.shell: lxc exec microk8s -- sudo snap install microk8s --classic
-#
-# - name: Load AppArmor on boot
-#   delegate_to: microk8s
-#   ansible.builtin.shell: |
-#     lxc shell microk8s
-#     cat > /etc/rc.local <<EOF
-#     #!/bin/bash
-#     apparmor_parser --replace /var/lib/snapd/apparmor/profiles/snap.microk8s.*
-#     exit 0
-#     EOF
-#     chmod +x /etc/rc.local
-
+  # TODO: fails with "The lxc module is not importable. Check the requirements
 - name: Install MicroK8s in an LXD container
+  become: true
   community.general.lxc_container:
     name: microk8s
-    container_command: lxc exec microk8s -- sudo snap install microk8s --classic
+    container_command: |
+      #sudo snap refresh microk8s --classic
+      sudo snap install microk8s --classic
   tags:
     - default
     - setup
 
 - name: Load AppArmor on boot
+  become: true
   community.general.lxc_container:
     name: microk8s
     container_command: |
-      lxc shell microk8s
       cat > /etc/rc.local <<EOF
       #!/bin/bash
       apparmor_parser --replace /var/lib/snapd/apparmor/profiles/snap.microk8s.*
