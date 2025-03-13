@@ -1,0 +1,21 @@
+# container_runtime/tasks/user.yml
+---
+- name: Create LXD group
+  ansible.builtin.group:
+    name: lxd
+    state: present
+  tags:
+    - default
+    - setup
+
+- name: Create LXD serviceaccount
+  ansible.builtin.user:
+    name: lxd
+    system: true
+    shell: /bin/false
+    create_home: false
+    append: true
+    groups: lxd
+  tags:
+    - default
+    - setup

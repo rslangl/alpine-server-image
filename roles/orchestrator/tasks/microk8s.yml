@@ -1,0 +1,46 @@
+# orchestrator/tasks/main.yml
+---
+- name: Start LXD container for MicroK8s
+  community.general.lxd_container:
+    name: microk8s
+    state: started
+    source:
+      type: image
+      mode: pull
+      server: https://cloud-images.ubuntu.com/releases/
+      protocol: simplestreams
+      alias: "24.10"
+    profiles: ["default", "microk8s"]
+    wait_for_ipv4_addresses: true
+    timeout: 600
+  tags:
+    - default
+    - setup
+
+  # TODO: fails with "The lxc module is not importable. Check the requirements
+- name: Install MicroK8s in an LXD container
+  become: true
+  community.general.lxc_container:
+    name: microk8s
+    container_command: |
+      #sudo snap refresh microk8s --classic
+      sudo snap install microk8s --classic
+  tags:
+    - default
+    - setup
+
+- name: Load AppArmor on boot
+  become: true
+  community.general.lxc_container:
+    name: microk8s
+    container_command: |
+      cat > /etc/rc.local <<EOF
+      #!/bin/bash
+      apparmor_parser --replace /var/lib/snapd/apparmor/profiles/snap.microk8s.*
+      exit 0
+      EOF
+      chmod +x /etc/rc.local
+  tags:
+    - default
+    - setup
+

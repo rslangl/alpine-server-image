@@ -1,5 +1,8 @@
 ---
 - hosts: all
+  gather_facts: false
   roles:
+    - security
     - container_runtime
+    - orchestrator
     #- idp
