@@ -1,6 +1,6 @@
-# home-infra-sandbox
+# infra-alpine-sandbox
 
-Test-runs of various workloads I want to utilize at home.
+Test-runs of various configs on an Alpine instance
 
 ## Usage
 
@@ -14,10 +14,3 @@ This will build and launch the Docker container. Once ready, run the playbook:
 ansible-playbook -i inventory -u root --private-key ssh/ssh playbook.yml
 ```
 
-## TODO
-
-* ~~SSH server~~
-* ~~Short-lived SSH keys: auto-generate client keys and copy to Docker container~~
-* ~~Ansible playbook test~~
-* Vault workload
-* FreeIPA workload
