@@ -1,5 +1,18 @@
 # container_runtime/tasks/main.yml
 ---
+- name: Install packages required for LXD provisioning
+  community.general.apk:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items:
+    - py3-pip
+    - py3-virtualenv
+    - py3-setuptools
+  tags:
+    - default
+    - setup
+
 - name: Install LXD
   become: true
   community.general.apk:
@@ -31,6 +44,9 @@
       config:
         ipv4.address: auto
         ipv6.address: none
+    storage_pools:
+    - name: data
+      driver: dir
     profiles:
     - name: default
       devices:
