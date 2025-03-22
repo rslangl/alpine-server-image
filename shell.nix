@@ -27,11 +27,11 @@
       #sleep 1
       #echo "Done!"
 
-      echo "Starting Docker daemon..."
-      sudo nohup dockerd > /tmp/dockerd.log 2>&1 &
-      DOCKER_PID=$!
-      sleep 1
-      echo "Done!"
+      #echo "Starting Docker daemon..."
+      #sudo nohup dockerd > /tmp/dockerd.log 2>&1 &
+      #DOCKER_PID=$!
+      #sleep 1
+      #echo "Done!"
 
       #echo "Building Docker image..."
       #sudo docker build -t alpine:local .
