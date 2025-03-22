@@ -12,7 +12,7 @@
 
     shellHook = ''
       DOCKER_PID=""
-      LXD_PID=""
+      #LXD_PID=""
       CONTAINER_IP=""
 
       trap 'echo "Cleanup in progres..."; sudo docker stop $(sudo docker ps -a -q); sudo docker container rm -vf $(sudo docker ps -a -q); sudo docker rmi -f $(sudo docker images -aq); kill $DOCKER_PID; kill $LXD_PID; ssh-keygen -R $CONTAINER_IP; "HOME"/.ssh/ sed -i '2s/.*/CONTAINER/' inventory; echo "Cleanup completed!"' EXIT SIGTERM SIGINT
