@@ -4,9 +4,16 @@
     name: docker
     state: present
     update_cache: true
+  register: pkg_docker_install
   tags:
     - default
     - setup
+
+- name: Get Docker binary path
+  ansible.builtin.command: which docker
+  register: path_docker_binary
+  when: pkg_docker_install == 0
+  changed_when: false
 
 - name: Enable Docker service
   ansible.builtin.service:
@@ -14,6 +21,7 @@
     enabled: true
     state: started
     runlevel: default
+  when: pkg_docker_install == 0
   tags:
     - default
     - setup
@@ -26,6 +34,7 @@
     create_home: false
     append: true
     groups: docker
+  when: pkg_docker_install == 0
   tags:
     - default
     - setup
@@ -35,7 +44,11 @@
     name: dockeruser
     user: dockeruser
     commands:
-      - /usr/bin/docker ps
-      - /usr/bin/docker run
+      - "{{ path_docker_binary.stdout }} ps"
+      - "{{ path_docker_binary.stdout }} run"
     nopassword: true
+  when: pkg_docker_install == 0
+  tags:
+    - default
+    - setup
 
