@@ -1,13 +1,19 @@
 # container_runtime/tasks/main.yml
 ---
-- name: Setup user
-  include_tasks: user.yml
-  tags:
-    - default
-    - setup
+# - name: Setup user
+#   include_tasks: user.yml
+#   tags:
+#     - default
+#     - setup
 
-- name: Setup LXD
-  include_tasks: lxd.yml
+# - name: Setup LXD
+#   include_tasks: lxd.yml
+#   tags:
+#     - default
+#     - setup
+
+- name: Setup DinD
+  include_tasks: dind.yaml
   tags:
     - default
     - setup
