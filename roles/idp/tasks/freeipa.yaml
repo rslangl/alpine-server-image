@@ -3,7 +3,7 @@
 - name: Launch FreeIPA container
   community.docker.docker_container:
     name: freeipa
-    image: freeipa/freeipa-server
+    image: freeipa/freeipa-server:fedora-41
     state: started
   tags:
     - default
