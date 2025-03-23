@@ -1,15 +1,15 @@
 ---
-- name: Install packages required for Docker provisioning
-  community.general.apk:
-    name: "{[ item }}"
-    state: present
-    update_cache: true
-  with_items:
-    - py3-requests
-    - py3-openssl
-  tags:
-    - default
-    - setup
+# - name: Install packages required for Docker provisioning
+#   community.general.apk:
+#     name: "{[ item }}"
+#     state: present
+#     update_cache: true
+#   with_items:
+#     - py3-requests
+#     - py3-openssl
+#   tags:
+#     - default
+#     - setup
 
 - name: Install Docker
   community.general.apk:
