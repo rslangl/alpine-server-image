@@ -1,0 +1,10 @@
+# idp/tasks/freeipa.yaml
+---
+- name: Launch FreeIPA container
+  community.docker.docker_container:
+    name: freeipa
+    image: freeipa/freeipa-server
+    state: started
+  tags:
+    - default
+    - setup
