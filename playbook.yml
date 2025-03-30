@@ -6,4 +6,5 @@
     - security
     - container_runtime
     - orchestrator
+    - secrets_management
     - idp
