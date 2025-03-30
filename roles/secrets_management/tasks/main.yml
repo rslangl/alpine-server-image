@@ -1,0 +1,7 @@
+# secrets_management/tasks/main.yml
+---
+- name: Setup Vault
+  include_tasks: vault.yml
+  tags:
+    - default
+    - setup

@@ -1,0 +1,19 @@
+# secrets_management/tasks/vault.yml
+---
+- name: Launch Vault container
+  community.docker.docker_container:
+    name: vault
+    image: hashicorp/vault:1.19
+    state: started
+    hostname: vault.local
+    ports:
+      - "8200:8200/tcp"
+    cgroupns_mode: "host"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    env:
+      VAULT_DEV_ROOT_TOKEN_ID: root
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:1234
+  tags:
+    - default
+    - setup
