@@ -13,7 +13,21 @@
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
     env:
       VAULT_DEV_ROOT_TOKEN_ID: root
-      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:1234
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
   tags:
     - default
     - setup
+
+- name: Initialize root certificates
+  community.docker.docker_container_exec:
+    container: vault
+    argv:
+      - /bin/sh
+      - -c
+      - vault secrets enable pki
+      - vault write pki/root/generate/internal common_name="local.me Root CA" ttl=365d
+      - vault write pki/intermediate/generate/internal common_name="local.me Intermediate CA" ttl=365d
+      - vault write pki/root/sign/intermediate common_name="local.me Intermediate CA" ttl=365d
+    env:
+      VAULT_TOKEN: root
+      VAULT_ADDR: http://127.0.0.1:8200
