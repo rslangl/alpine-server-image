@@ -3,7 +3,7 @@
 - name: Launch Vault container
   community.docker.docker_container:
     name: vault
-    image: hashicorp/vault:1.19
+    image: hashicorp/vault:1.20
     state: started
     hostname: vault.local
     ports:
